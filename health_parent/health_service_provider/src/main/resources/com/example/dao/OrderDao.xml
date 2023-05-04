@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.OrderDao">
+    <!--配置方法-->
+    <resultMap id="baseResultMap" type="com.example.pojo.Order">
+        <id column="id" property="id"/>
+        <result column="member_id" property="memberId"/>
+        <result column="orderDate" property="orderDate"/>
+        <result column="orderType" property="orderType"/>
+        <result column="orderStatus" property="orderStatus"/>
+        <result column="setmeal_id" property="setmealId"/>
+    </resultMap>
+
+    <insert id="add" parameterType="com.example.pojo.Order">
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            select last_insert_id()
+        </selectKey>
+        insert into health.t_order(member_id, orderDate, orderType, orderStatus, setmeal_id)
+        values (#{memberId}, #{orderDate}, #{orderType}, #{orderStatus}, #{setmealId})
+    </insert>
+
+    <select id="findByCondition" parameterType="com.example.pojo.Order" resultType="com.example.pojo.Order">
+        select *
+        from health.t_order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="memberId != null">
+                and member_id = #{memberId}
+            </if>
+            <if test="orderDate != null">
+                and orderDate = #{orderDate}
+            </if>
+            <if test="orderType != null">
+                and orderType = #{orderType}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus = #{orderStatus}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="Map">
+        select o.orderDate as orderDate,
+               o.orderType as orderType,
+               m.name      as member,
+               s.name      as setmeal
+        from health.t_order as o,
+             health.t_setmeal as s,
+             health.t_member as m
+        where s.id = o.setmeal_id
+          and m.id = o.member_id
+          and o.id = #{id}
+    </select>
+</mapper>

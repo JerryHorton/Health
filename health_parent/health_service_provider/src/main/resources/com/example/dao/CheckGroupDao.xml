@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.CheckGroupDao">
+    <insert id="addGroup" parameterType="com.example.pojo.CheckGroup">
+        <!--利用mybatis的selectKey标签获取自增产生的id-->
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            select last_insert_id()
+        </selectKey>
+        insert into health.t_checkgroup(code, name, helpCode, sex, remark, attention)
+        values (#{code}, #{name}, #{helpCode}, #{sex}, #{remark}, #{attention})
+    </insert>
+
+    <insert id="addGroup_Items" parameterType="Map">
+        insert into health.t_checkgroup_checkitem(checkgroup_id, checkitem_id)
+        values (#{checkGroupId}, #{checkItemId})
+    </insert>
+
+    <select id="findByCondition" parameterType="String" resultType="com.example.pojo.CheckGroup">
+        select *
+        from health.t_checkgroup
+        <if test="value != null and value != '' and value.length > 0">
+            where code = #{value} or name = #{value} or helpCode = #{value}
+        </if>
+    </select>
+
+    <select id="findById" parameterType="Integer" resultType="com.example.pojo.CheckGroup">
+        select *
+        from health.t_checkgroup
+        where id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.example.pojo.CheckGroup">
+        select *
+        from health.t_checkgroup
+    </select>
+
+    <select id="findCheckItemIdsByCheckGroupId" parameterType="Integer" resultType="Integer">
+        select checkitem_id
+        from health.t_checkgroup_checkitem
+        where checkgroup_id = #{id}
+    </select>
+
+    <update id="editGroup" parameterType="com.example.pojo.CheckGroup">
+        update health.t_checkgroup
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="helpCode != null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGroup_Item" parameterType="Integer">
+        delete
+        from health.t_checkgroup_checkitem
+        where checkgroup_id = #{id}
+    </delete>
+
+    <delete id="deleteGroup" parameterType="Integer">
+        delete
+        from health.t_checkgroup
+        where id = #{id}
+    </delete>
+</mapper>

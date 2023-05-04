@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.OrderSettingDao">
+    <!--配置方法-->
+    <select id="findCountByOrderDate" parameterType="com.example.pojo.OrderSetting" resultType="long">
+        select count(*)
+        from health.t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+
+    <insert id="add" parameterType="com.example.pojo.OrderSetting">
+        insert into health.t_ordersetting(orderDate, number, reservations)
+        values (#{orderDate}, #{number}, #{reservations})
+    </insert>
+
+    <update id="editNumberByOrderDate" parameterType="com.example.pojo.OrderSetting">
+        update health.t_ordersetting
+        set number = #{number}
+        where orderDate = #{orderDate}
+    </update>
+
+    <update id="editReservationsByOrderDate" parameterType="com.example.pojo.OrderSetting">
+        update health.t_ordersetting
+        set reservations = #{reservations}
+        where orderDate = #{orderDate}
+    </update>
+
+    <select id="getOrderSettingByMonth" parameterType="Map" resultType="com.example.pojo.OrderSetting">
+        select *
+        from health.t_ordersetting
+        where month(orderDate) = #{currentMonth}
+          and year(orderDate) = #{currentYear}
+    </select>
+
+    <select id="findByOrderDate" parameterType="Date" resultType="com.example.pojo.OrderSetting">
+        select *
+        from health.t_ordersetting
+        where orderDate = #{orderDate}
+    </select>
+</mapper>

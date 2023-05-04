@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.RoleDao">
+    <!--配置方法-->
+    <select id="findByUserId" parameterType="Integer" resultType="com.example.pojo.Role">
+        select r.id, r.name, r.keyword, r.description
+        from health.t_role as r,
+             health.t_user_role as ur
+        where ur.user_id = #{userId}
+          and r.id = ur.role_id;
+    </select>
+</mapper>

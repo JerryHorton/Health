@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.SetmealDao">
+    <!--配置方法-->
+    <select id="findByCondition" parameterType="String" resultType="com.example.pojo.Setmeal">
+        select *
+        from health.t_setmeal
+        <if test="value != null and value.length > 0">
+            where code = #{value} or name = #{value} or helpCode = #{value}
+        </if>
+    </select>
+
+    <insert id="addSetmeal" parameterType="com.example.pojo.Setmeal">
+        <selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            select last_insert_id()
+        </selectKey>
+        insert into health.t_setmeal(name, code, helpCode, sex, age, price, remark, attention, img)
+        values (#{name}, #{code}, #{helpCode}, #{sex}, #{age}, #{price}, #{remark}, #{attention}, #{img})
+    </insert>
+
+    <insert id="addSetmeal_checkggroup" parameterType="Map">
+        insert into health.t_setmeal_checkgroup(setmeal_id, checkgroup_id)
+        values (#{setmealId}, #{checkgroupId})
+    </insert>
+
+    <select id="findById" parameterType="Integer" resultType="com.example.pojo.Setmeal">
+        select *
+        from health.t_setmeal
+        where id = #{id}
+    </select>
+
+    <select id="findCheckGroupIdsBySetmealId" parameterType="Integer" resultType="Integer">
+        select checkgroup_id
+        from health.t_setmeal_checkgroup
+        where setmeal_id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.example.pojo.Setmeal">
+        select *
+        from health.t_setmeal
+    </select>
+
+    <update id="editSetmwal" parameterType="com.example.pojo.Setmeal">
+        update health.t_setmeal
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="helpCode != null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="attention != null">
+                attention = #{attention},
+            </if>
+            <if test="img != null">
+                img = #{img},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSetmealCheckGroup" parameterType="Integer">
+        delete
+        from health.t_setmeal_checkgroup
+        where setmeal_id = #{id};
+    </delete>
+
+    <delete id="deleteSetmeal" parameterType="Integer">
+        delete
+        from health.t_setmeal
+        where id = #{id}
+    </delete>
+</mapper>

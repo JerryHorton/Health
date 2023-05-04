@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.PermissionDao">
+    <!--配置方法-->
+    <select id="findByRoleId" parameterType="Integer" resultType="com.example.pojo.Permission">
+        select p.id, p.name, p.keyword, p.description
+        from health.t_role_permission as rp,
+             health.t_permission as p
+        where rp.permission_id = p.id
+          and rp.role_id = #{roleId};
+    </select>
+</mapper>
